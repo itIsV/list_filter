@@ -1,10 +1,17 @@
 defmodule ListFilter do
-  def call(list), do: convert_to_number(list)
+  def call(list) when is_list(list), do: convert_to_number(list)
+
+  def call(_list), do: IO.inspect(" The parameter need to be a list of strings")
 
   defp convert_to_number(list) do
-    numbers_and_errors = Enum.map(list, fn x -> Integer.parse(x) end)
+    case Enum.any?(list, fn element -> not is_bitstring(element) end) do
+      true ->
+        IO.inspect(" The parameter need to be a list of strings")
 
-    filter_numbers(numbers_and_errors)
+      false ->
+        numbers_and_errors = Enum.map(list, fn x -> Integer.parse(x) end)
+        filter_numbers(numbers_and_errors)
+    end
   end
 
   defp filter_numbers(list) do
